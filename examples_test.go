@@ -1,4 +1,4 @@
-package jsonrpc_test
+package jsonrpc_test2
 
 import (
 	"context"
