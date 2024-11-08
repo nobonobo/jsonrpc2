@@ -161,6 +161,7 @@ func sendResponse(rw http.ResponseWriter, resp *Response) {
 		log.Printf("jsonrpc: sending response: %v", err)
 		return
 	}
+	rw.Header().Add("Content-Type", "application/json")
 	_, err = rw.Write(b)
 	if err != nil {
 		log.Printf("jsonrpc: sending response: %v", err)
@@ -174,14 +175,14 @@ func callMethod(ctx context.Context, req *request, htype handlerType) ([]reflect
 		return retv, nil
 	}
 
-	var pvalue, pzero reflect.Value
+	var pvalue /*, pzero*/ reflect.Value
 	pIsValue := false
 	if htype.ptype.Kind() == reflect.Ptr {
 		pvalue = reflect.New(htype.ptype.Elem())
-		pzero = reflect.New(htype.ptype.Elem())
+		//pzero = reflect.New(htype.ptype.Elem())
 	} else {
 		pvalue = reflect.New(htype.ptype)
-		pzero = reflect.New(htype.ptype)
+		//pzero = reflect.New(htype.ptype)
 		pIsValue = true
 	}
 
@@ -190,7 +191,7 @@ func callMethod(ctx context.Context, req *request, htype handlerType) ([]reflect
 	if req.Params == nil || string(req.Params) == string(null) {
 		return nil, errServerInvalidParams
 	}
-	if err := json.Unmarshal(req.Params, pvalue.Interface()); err != nil || pvalue.Elem().Interface() == pzero.Elem().Interface() {
+	if err := json.Unmarshal(req.Params, pvalue.Interface()); err != nil /*|| pvalue.Elem().Interface() == pzero.Elem().Interface() */ {
 		return nil, errServerInvalidParams
 	}
 
