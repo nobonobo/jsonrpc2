@@ -1,10 +1,10 @@
-package jsonrpc_test2
+package jsonrpc2
 
 import (
 	"context"
 	"net/http"
 
-	"github.com/echovl/jsonrpc"
+	"github.com/nobonobo/jsonrpc2"
 )
 
 type Version struct {
@@ -12,7 +12,7 @@ type Version struct {
 }
 
 func ExampleServer() {
-	server := jsonrpc.NewServer()
+	server := jsonrpc2.NewServer()
 	err := server.HandleFunc("version", func(ctx context.Context) (Version, error) {
 		return Version{"1.0.0"}, nil
 	})
